@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <div class="row">
+    <div class="row" v-if="!loading">
       <div class="col-2 offset-2">
         <picture class="me-4">
           <img class="img-responsive" :src="movie?.Poster" alt="">
@@ -30,6 +30,11 @@
         </div>
       </div>
     </div>
+    <div class="row" v-if="loading">
+      <div class="col-10 offset-2 text-center">
+        <span>Loading...</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -47,15 +52,18 @@ export default defineComponent({
   setup () {
     const route = useRoute()
     const movie = ref()
+    const loading = ref(false)
 
     onMounted(() => {
       const movieId = route.params.id
+      loading.value = true
       api.searchMovieById(movieId).then((response: IMovie) => {
         movie.value = response
+        loading.value = false
       })
     })
 
-    return { movie }
+    return { movie, loading }
   }
 })
 
