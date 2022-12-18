@@ -78,7 +78,7 @@ export default defineComponent({
     async function search () {
       loading.value = true
       const response = await api.searchMovie(currentPage.value, formattedText)
-      totalResults.value = await response.totalresults
+      totalResults.value = await Number(response.totalResults)
       if (response.Response === 'True') {
         error.value = ''
         movies.value = await response.Search.map((movie: IMovie) => {
@@ -110,7 +110,7 @@ export default defineComponent({
 
     watch(currentPage, () => {
       api.searchMovie(currentPage.value, formattedText).then((response: IMoviesResponse) => {
-        totalResults.value = response.totalresults
+        totalResults.value = Number(response.totalResults)
         movies.value = response.Search.map((movie:IMovie) => {
           movie = { ...movie, mainField: `${movie.Title} (${movie.Year})` }
           return movie
